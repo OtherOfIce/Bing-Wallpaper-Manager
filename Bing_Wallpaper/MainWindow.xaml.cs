@@ -7,8 +7,12 @@ namespace Bing_Wallpaper
 {
     public partial class MainWindow : Window
     {
+        private BingJSONParser parser = new BingJSONParser();
+
+
         static String Base =
-            @"F:\Libraries\Documents\Visual Studio 2017\Projects\Bing_Wallpaper\Bing_Wallpaper\image";
+            Directory.GetCurrentDirectory() + "\\img\\" + "image";
+
 
         uint FileNumber = 0;
         static String FileExtention = ".bmp";
@@ -17,43 +21,50 @@ namespace Bing_Wallpaper
         public MainWindow()
         {
             fullPath = Base + FileNumber + FileExtention;
+            Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\img\\");
+            Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\json\\");
             DownloadImage.Download(BingXMLParser.getImageURL(FileNumber), fullPath);
             InitializeComponent();
-        }
-
-        private void Forwards_Button_Click(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine("Foward button clicked!");
-            FileNumber++;
-            UpdateWallpaper();
-        }
-
-        private void Backwards_Button_Click(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine("Backwards button clicked!");
-            FileNumber--;
             UpdateWallpaper();
         }
 
 
         private void UpdateWallpaper()
         {
-            Console.WriteLine(fullPath);
             fullPath = Base + FileNumber + FileExtention;
-
-            if (!File.Exists(fullPath))
-            {
-                DownloadImage.Download(BingXMLParser.getImageURL(FileNumber),fullPath);               
-            }
+            DownloadImage.Download(parser.getImageURL(FileNumber), fullPath);
             BitmapImage image = new BitmapImage(new Uri(fullPath));
-            this.WallpaperImage.Source = image;
+            this.ImageBackground.ImageSource = image;
+        }
 
+        private void NextWallpaper()
+        {
+            FileNumber++;
+        }
+
+        private void PreviousWallpaper()
+        {
+            if (FileNumber != 0)
+            {
+                FileNumber--;
+            }
+        }
+
+        private void Forwards_Button_Click(object sender, RoutedEventArgs e)
+        {
+            NextWallpaper();
+            UpdateWallpaper();
+        }
+
+        private void Backwards_Button_Click(object sender, RoutedEventArgs e)
+        {
+            PreviousWallpaper();
+            UpdateWallpaper();
         }
 
         private void Change_Wallpaper_Button_Click(object sender, RoutedEventArgs e)
         {
-            Change_Wallpaper.ChangeWallpaper.SetBackground(
-                DownloadImage.Download(BingXMLParser.getImageURL(FileNumber), fullPath));
+            Change_Wallpaper.ChangeWallpaper.SetBackground(fullPath);
         }
     }
 }

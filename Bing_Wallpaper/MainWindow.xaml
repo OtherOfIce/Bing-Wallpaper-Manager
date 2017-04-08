@@ -5,13 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bing_Wallpaper"
         mc:Ignorable="d"
-        Title="Bing Wallpaper" Height="350" Width="525">
+        Title="Bing Wallpaper" Height="400" Width="625">
     <Grid>
-        <Image x:Name="WallpaperImage" Source="F:\Libraries\Documents\Visual Studio 2017\Projects\Bing_Wallpaper\Bing_Wallpaper\image.bmp" Margin="0,54,0,98"></Image>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.10*"></ColumnDefinition>
+            <ColumnDefinition Width="0.80*"></ColumnDefinition>
+            <ColumnDefinition Width="0.10*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
         
-        <Button x:Name="Fowards_Button" Margin="380,241,0,42" Content="Forwards" Click="Forwards_Button_Click"></Button>
-        <Button x:Name="Change_Wallpaper_Button" Margin="183,241,175,19" Content="Change Wallpaper" Click="Change_Wallpaper_Button_Click" ></Button>
-        <Button x:Name="Backwards_Button" Margin="0,241,380,42" Content="Backwards" Click="Backwards_Button_Click"/>
+        
+        <Grid.Background>
+            <ImageBrush x:Name="ImageBackground" ImageSource="F:\Google Drive\Bing_Wallpaper\Bing_Wallpaper\bin\Debug\img\image0.bmp" Stretch="UniformToFill"/>
+        </Grid.Background>
+
+        
+        <Button x:Name="Fowards_Button" Grid.Column="2" Margin="0" FontFamily="Marlett" FontSize="20" Content="4" Foreground="White" Background="Black" Opacity="0.3" Click="Forwards_Button_Click"></Button>
+        <Grid Grid.Column="1" Margin="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.8*" />
+                <RowDefinition Height="0.2*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.20*"></ColumnDefinition>
+                <ColumnDefinition Width="0.20*"></ColumnDefinition>
+                <ColumnDefinition Width="0.20*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="Change_Wallpaper_Button" Grid.Row="1" Grid.Column="1" Margin="0" Content="Change Wallpaper" Foreground="White" Background="Black" Opacity="0.3" Click="Change_Wallpaper_Button_Click" ></Button>
+        </Grid>
+        <Button x:Name="Backwards_Button" Grid.Column="0" Margin="0" FontFamily="Marlett" FontSize="20" Content="3" Foreground="White" Background="Black" Opacity="0.3" Click="Backwards_Button_Click"/>
 
     </Grid>
 </Window>

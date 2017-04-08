@@ -16,7 +16,7 @@ namespace Change_Wallpaper
             int SPIF_UPDATEINIFILE = 0x01;
             int SPIF_SENDWININICHANGE = 0x02;
             int SPI_SETDESKWALLPAPER = 0x0014;
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 5; i++)
             {
                 SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, wallpaperPath,
                     SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);

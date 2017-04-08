@@ -67,7 +67,8 @@
     </Compile>
     <Compile Include="ChangeWallpaper.cs" />
     <Compile Include="Download Image.cs" />
-    <Compile Include="Handle XML.cs" />
+    <Compile Include="BingJSONParser.cs" />
+    <Compile Include="BingXMLParser.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -14,7 +15,11 @@ namespace Bing_Wallpaper
         {
             using (WebClient client = new WebClient())
             {
-                client.DownloadFile(new Uri(url), downloadPath);
+                if (!File.Exists(downloadPath))
+                {
+                    client.DownloadFile(new Uri(url), downloadPath);
+
+                }
             }
             return downloadPath;
         }
