@@ -1,70 +1,93 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace Bing_Wallpaper
 {
     public partial class MainWindow : Window
     {
-        private BingJSONParser parser = new BingJSONParser();
+        private Bing_Wallpaper_Manager manager;
 
-
-        static String Base =
-            Directory.GetCurrentDirectory() + "\\img\\" + "image";
-
-
-        uint FileNumber = 0;
-        static String FileExtention = ".bmp";
-        static String fullPath;
 
         public MainWindow()
         {
-            fullPath = Base + FileNumber + FileExtention;
-            Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\img\\");
-            Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\json\\");
-            DownloadImage.Download(BingXMLParser.getImageURL(FileNumber), fullPath);
             InitializeComponent();
-            UpdateWallpaper();
+            this.CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, this.OnCloseWindow));
+            this.CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, this.OnMaximizeWindow,
+                this.OnCanResizeWindow));
+            this.CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand, this.OnMinimizeWindow,
+                this.OnCanMinimizeWindow));
+            this.CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, this.OnRestoreWindow,
+                this.OnCanResizeWindow));
+            manager = new Bing_Wallpaper_Manager(this);
+            manager.UpdateWallpaper();
+
+            this.KeyDown += new KeyEventHandler(OnKeyDown);
         }
 
-
-        private void UpdateWallpaper()
+        private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            fullPath = Base + FileNumber + FileExtention;
-            DownloadImage.Download(parser.getImageURL(FileNumber), fullPath);
-            BitmapImage image = new BitmapImage(new Uri(fullPath));
-            this.ImageBackground.ImageSource = image;
-        }
-
-        private void NextWallpaper()
-        {
-            FileNumber++;
-        }
-
-        private void PreviousWallpaper()
-        {
-            if (FileNumber != 0)
+            if (e.Key == Key.Left)
             {
-                FileNumber--;
+                manager.PreviousWallpaper();
+            }
+
+            if (e.Key == Key.Right)
+            {
+                manager.NextWallpaper();
             }
         }
 
         private void Forwards_Button_Click(object sender, RoutedEventArgs e)
         {
-            NextWallpaper();
-            UpdateWallpaper();
+            manager.NextWallpaper();
         }
 
         private void Backwards_Button_Click(object sender, RoutedEventArgs e)
         {
-            PreviousWallpaper();
-            UpdateWallpaper();
+            manager.PreviousWallpaper();
         }
 
         private void Change_Wallpaper_Button_Click(object sender, RoutedEventArgs e)
         {
-            Change_Wallpaper.ChangeWallpaper.SetBackground(fullPath);
+            Change_Wallpaper.ChangeWallpaper.SetBackground(manager.fullPath);
+        }
+
+        private void OnCanResizeWindow(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = this.ResizeMode == ResizeMode.CanResize || this.ResizeMode == ResizeMode.CanResizeWithGrip;
+        }
+
+        private void OnCanMinimizeWindow(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = this.ResizeMode != ResizeMode.NoResize;
+        }
+
+        private void OnCloseWindow(object target, ExecutedRoutedEventArgs e)
+        {
+            SystemCommands.CloseWindow(this);
+        }
+
+        private void OnMaximizeWindow(object target, ExecutedRoutedEventArgs e)
+        {
+            SystemCommands.MaximizeWindow(this);
+        }
+
+        private void OnMinimizeWindow(object target, ExecutedRoutedEventArgs e)
+        {
+            SystemCommands.MinimizeWindow(this);
+        }
+
+        private void OnRestoreWindow(object target, ExecutedRoutedEventArgs e)
+        {
+            SystemCommands.RestoreWindow(this);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            
         }
     }
 }

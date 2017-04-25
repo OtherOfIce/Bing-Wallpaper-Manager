@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Animation;
 using Newtonsoft.Json;
@@ -38,68 +39,50 @@ namespace Bing_Wallpaper
 
     class BingJSONParser
     {
-        private BingWallpapers wallpapers;
+        public BingWallpapers allWallpapers;
+        public List<WallpaperInfo> wallpaperDetailsList;
 
         public BingJSONParser()
         {
+            
+            wallpaperDetailsList = new List<WallpaperInfo>();
             using (WebClient client = new WebClient())
             {
                 String jsonData = client.DownloadString(@"http://www.bing.com/gallery/home/browsedata?z=0");
                 jsonData = jsonData.Remove(0, 48);
                 jsonData = jsonData.Remove(jsonData.Length - 27, 27);
-                wallpapers =
+                allWallpapers =
                     JsonConvert.DeserializeObject<BingWallpapers>(jsonData
                     );
-                
+
+                Thread removeBadWallpapersThread = new Thread(new ThreadStart(removeNonWallpapers));
+                removeBadWallpapersThread.IsBackground = true;
+                removeBadWallpapersThread.Start();
             }
         }
+    
 
-        
-        private void removeNonWallpapers(int index)
+    public void removeNonWallpapers()
+    {
+    BingWallpapers data = allWallpapers;
+        for (int index = 0; index< allWallpapers.imageIds.Count; index++)
+    {
+        WallpaperInfo removeWallpaperInfo = JsonConvert.DeserializeObject<WallpaperInfo>(
+            new WebClient().DownloadString(
+                "http://www.bing.com/gallery/home/imagedetails/" + data.imageIds[index]));
+        if (removeWallpaperInfo.wallpaper)
         {
-            
-                WallpaperInfo removeWallpaperInfo = JsonConvert.DeserializeObject<WallpaperInfo>(new WebClient().DownloadString(
-                        "http://www.bing.com/gallery/home/imagedetails/" + wallpapers.imageIds[index]));
-            
-                    wallpapers.imageIds.RemoveAt(index);
-                    wallpapers.categories.RemoveAt(index);
-                    wallpapers.tags.RemoveAt(index);
-                    wallpapers.holidays.RemoveAt(index);
-                    wallpapers.regions.RemoveAt(index);
-                    wallpapers.countries.RemoveAt(index);
-                    wallpapers.colors.RemoveAt(index);
-                    wallpapers.shortNames.RemoveAt(index);
-                    wallpapers.imageNames.RemoveAt(index);
-                    wallpapers.dates.RemoveAt(index);
-        }
-            
-            
-        
-
-        public String getImageURL(uint imageNumber)
-        {
-            String imageID = wallpapers.imageIds[(int) imageNumber];
-            String picDetails = "http://www.bing.com/gallery/home/imagedetails/" + imageID;
-
-            using (WebClient client = new WebClient())
-            {
-                WallpaperInfo wallInfo =
-                    JsonConvert.DeserializeObject<WallpaperInfo>(client.DownloadString(picDetails));
-
-                while (true)
-                {
-                    if (wallInfo.wpFullFilename != "")
-                    {
-                        return ("http://az608707.vo.msecnd.net/files/" + wallInfo.wpFullFilename);
-                    }
-                    else
-                    {
-                        removeNonWallpapers((int)imageNumber);
-                        return getImageURL((imageNumber));
-                    }
-                }
-                
-            }
+            wallpaperDetailsList.Add(removeWallpaperInfo);
         }
     }
+    }
+
+
+    public String getImageURL(uint imageNumber)
+    {
+    WallpaperInfo wallInfo = wallpaperDetailsList[(int) imageNumber];
+        return ("http://az608707.vo.msecnd.net/files/" + wallInfo.wpFullFilename);
+    }
+}
+
 }
