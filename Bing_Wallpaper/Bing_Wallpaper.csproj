@@ -69,7 +69,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Bing_Wallpaper_Manager.cs" />
+    <Compile Include="BingWallpapWallpaperManager.cs" />
     <Compile Include="ChangeWallpaper.cs" />
     <Compile Include="Download Image.cs" />
     <Compile Include="BingJSONParser.cs" />
@@ -80,6 +80,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

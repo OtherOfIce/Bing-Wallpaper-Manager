@@ -37,14 +37,14 @@ namespace Bing_Wallpaper
         public List<string> text { get; set; }
     }
 
-    class BingJSONParser
+    class BingJSONParser : IParser
     {
         public BingWallpapers allWallpapers;
         public List<WallpaperInfo> wallpaperDetailsList;
+        private uint imagePosition = 0;
 
         public BingJSONParser()
         {
-            
             wallpaperDetailsList = new List<WallpaperInfo>();
             using (WebClient client = new WebClient())
             {
@@ -60,29 +60,71 @@ namespace Bing_Wallpaper
                 removeBadWallpapersThread.Start();
             }
         }
-    
 
-    public void removeNonWallpapers()
-    {
-    BingWallpapers data = allWallpapers;
-        for (int index = 0; index< allWallpapers.imageIds.Count; index++)
-    {
-        WallpaperInfo removeWallpaperInfo = JsonConvert.DeserializeObject<WallpaperInfo>(
-            new WebClient().DownloadString(
-                "http://www.bing.com/gallery/home/imagedetails/" + data.imageIds[index]));
-        if (removeWallpaperInfo.wallpaper)
+
+        public void removeNonWallpapers()
         {
-            wallpaperDetailsList.Add(removeWallpaperInfo);
+            BingWallpapers data = allWallpapers;
+            for (int index = 0; index < allWallpapers.imageIds.Count; index++)
+            {
+                WallpaperInfo removeWallpaperInfo = JsonConvert.DeserializeObject<WallpaperInfo>(
+                    new WebClient().DownloadString(
+                        "http://www.bing.com/gallery/home/imagedetails/" + data.imageIds[index]));
+                if (removeWallpaperInfo.wallpaper)
+                {
+                    wallpaperDetailsList.Add(removeWallpaperInfo);
+                }
+            }
+        }
+
+        public ImageDetails GetNextImageDetails()
+        {
+            WallpaperInfo wallInfo = wallpaperDetailsList[(int) imagePosition];
+
+            ImageDetails details;
+            details.ImageUri = new Uri("http://az608707.vo.msecnd.net/files/" + wallInfo.wpFullFilename);
+            details.ImageFilePath = wallInfo.wpShortFilename;
+
+            imagePosition += 1;
+            return details;
+        }
+
+        public ImageDetails GetPreviousImageDetails()
+        {
+            if (imagePosition != 0)
+            {
+                imagePosition -= 1;
+            }
+            WallpaperInfo wallInfo = wallpaperDetailsList[(int) imagePosition];
+            ImageDetails details;
+            details.ImageUri = new Uri("http://az608707.vo.msecnd.net/files/" + wallInfo.wpFullFilename);
+            details.ImageFilePath = wallInfo.wpShortFilename;
+            return details;
+        }
+
+        public ImageDetails GetSpecificImageDetails(uint imgNum)
+        {
+            while (imgNum >= wallpaperDetailsList.Count)
+            {
+                Thread.Sleep(500);
+            }
+            WallpaperInfo wallInfo = wallpaperDetailsList[(int) imgNum];
+
+            ImageDetails details;
+            details.ImageUri = new Uri("http://az608707.vo.msecnd.net/files/" + wallInfo.wpFullFilename);
+            details.ImageFilePath = wallInfo.wpShortFilename;
+
+            return details;
+        }
+
+        public uint GetImageNumber()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetImageNumber()
+        {
+            throw new NotImplementedException();
         }
     }
-    }
-
-
-    public String getImageURL(uint imageNumber)
-    {
-    WallpaperInfo wallInfo = wallpaperDetailsList[(int) imageNumber];
-        return ("http://az608707.vo.msecnd.net/files/" + wallInfo.wpFullFilename);
-    }
-}
-
 }

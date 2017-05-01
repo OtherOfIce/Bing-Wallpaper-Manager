@@ -8,12 +8,13 @@ namespace Bing_Wallpaper
 {
     public partial class MainWindow : Window
     {
-        private Bing_Wallpaper_Manager manager;
+        private BingWallpapWallpaperManager manager;
 
 
         public MainWindow()
         {
             InitializeComponent();
+            manager = new BingWallpapWallpaperManager(this);
             this.CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, this.OnCloseWindow));
             this.CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, this.OnMaximizeWindow,
                 this.OnCanResizeWindow));
@@ -21,9 +22,6 @@ namespace Bing_Wallpaper
                 this.OnCanMinimizeWindow));
             this.CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, this.OnRestoreWindow,
                 this.OnCanResizeWindow));
-            manager = new Bing_Wallpaper_Manager(this);
-            manager.UpdateWallpaper();
-
             this.KeyDown += new KeyEventHandler(OnKeyDown);
         }
 
