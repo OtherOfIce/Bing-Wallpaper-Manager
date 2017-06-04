@@ -8,13 +8,13 @@ namespace Bing_Wallpaper
 {
     public partial class MainWindow : Window
     {
-        private BingWallpapWallpaperManager manager;
+        private BingWallpaperManager manager;
 
 
         public MainWindow()
         {
             InitializeComponent();
-            manager = new BingWallpapWallpaperManager(this);
+            manager = new BingWallpaperManager(this);
             this.CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, this.OnCloseWindow));
             this.CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, this.OnMaximizeWindow,
                 this.OnCanResizeWindow));

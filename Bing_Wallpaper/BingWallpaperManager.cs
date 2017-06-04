@@ -8,22 +8,22 @@ using Timer = System.Timers.Timer;
 
 namespace Bing_Wallpaper
 {
-    class BingWallpapWallpaperManager
+    class BingWallpaperManager
     {
+        private StreamWriter file = new StreamWriter("test.txt");
         private readonly BingJSONParser parser = new BingJSONParser(); //Default Parser
-        private List<ImageDetails> imageList = new List<ImageDetails>();
-        private int cacheNumber = 0;
+        private List<ImageDetails> imageList = new List<ImageDetails>(); //List of images
 
         static String basePath =
-            Directory.GetCurrentDirectory() + "\\img\\";
+            Directory.GetCurrentDirectory() + "\\img\\"; //The path for the image!
 
-        private DownloadImageManager downloadImageManager = new DownloadImageManager(basePath);
+        private DownloadImageManager downloadImageManager = new DownloadImageManager(); //Download manager
 
-        public int imageNumber = 0;
-        public String fullPath;
+        public int imageNumber = 0; //What image are we looking at.
+        public String fullPath; //The fullpath to the directory ?
         private MainWindow window;
 
-        public BingWallpapWallpaperManager(MainWindow window)
+        public BingWallpaperManager(MainWindow window)
         {
             this.window = window;
             InitiliseDirectories();
@@ -41,25 +41,16 @@ namespace Bing_Wallpaper
         public void cacheWallpapers()
         {
             Console.WriteLine("Starting caching");
+            int cacheNumber = 0;
             while (true)
             {
-                for (int i = cacheNumber; cacheNumber < imageNumber + 20; i++)
+                for (;cacheNumber < imageNumber + 10; cacheNumber++)
                 {
-                    try
-                    {
-
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        throw;
-                    }
-                    ImageDetails details = parser.GetSpecificImageDetails((uint) i);
+                    ImageDetails details = parser.GetSpecificImageDetails((uint)cacheNumber);
                     String ImagePath = basePath + details.ImageFilePath;
-                    Console.WriteLine("Cache " + i + " File Name: " + details.ImageFilePath);
-                    imageList.Add(details);
+                    Console.WriteLine("Cache " + cacheNumber + " File Name: " + details.ImageFilePath);
                     downloadImageManager.DownloadImage(details);
-                    cacheNumber++;
+                    imageList.Add(details);
                 }
             }
         }
@@ -89,18 +80,13 @@ namespace Bing_Wallpaper
 
         public void NextWallpaper()
         {
-            try
-            {
-                imageNumber++;
-                UpdateWallpaper(imageList[imageNumber]);
-            }
-            catch (ArgumentOutOfRangeException exception)
-            {
-                Console.WriteLine("Out of range exception!");
-                imageNumber--;
-                NextWallpaper();
-            }
             
+            while (!(imageList.Count >= imageNumber + 2))
+            {
+            }
+
+            imageNumber++;
+            UpdateWallpaper(imageList[imageNumber]);
         }
 
         public void PreviousWallpaper()
