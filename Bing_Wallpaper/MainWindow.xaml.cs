@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Change_Wallpaper;
 
 namespace Bing_Wallpaper
 {
@@ -50,7 +51,8 @@ namespace Bing_Wallpaper
 
         private void Change_Wallpaper_Button_Click(object sender, RoutedEventArgs e)
         {
-            Change_Wallpaper.ChangeWallpaper.SetBackground(manager.fullPath);
+            
+            ChangeWallpaper.SetBackground(new Uri(ImageBackground.ImageSource.ToString()).LocalPath);
         }
 
         private void OnCanResizeWindow(object sender, CanExecuteRoutedEventArgs e)

@@ -10,7 +10,7 @@ namespace Change_Wallpaper
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool SystemParametersInfo(int uiAction, uint uiParam, String pvParam, int fWinIni);
 
-        public static void SetBackground(string wallpaperPath)
+        public static void SetBackground(String wallpaperPath)
         {
             int None = 0x00;
             int SPIF_UPDATEINIFILE = 0x01;

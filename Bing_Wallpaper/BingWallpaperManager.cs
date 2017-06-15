@@ -2,99 +2,80 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using System.Timers;
 using System.Windows.Media.Imaging;
-using Timer = System.Timers.Timer;
 
 namespace Bing_Wallpaper
 {
-    class BingWallpaperManager
+    internal class BingWallpaperManager
     {
-        private StreamWriter file = new StreamWriter("test.txt");
-        private readonly BingJSONParser parser = new BingJSONParser(); //Default Parser
-        private List<ImageDetails> imageList = new List<ImageDetails>(); //List of images
-
-        static String basePath =
-            Directory.GetCurrentDirectory() + "\\img\\"; //The path for the image!
-
-        private DownloadImageManager downloadImageManager = new DownloadImageManager(); //Download manager
-
-        public int imageNumber = 0; //What image are we looking at.
-        public String fullPath; //The fullpath to the directory ?
-        private MainWindow window;
+        private readonly BingJSONParser _defaultParser = new BingJSONParser();
+        private readonly List<ImageDetails> _imageList = new List<ImageDetails>();
+        private readonly MainWindow _window;
+        
+        public int ImageNumber;
 
         public BingWallpaperManager(MainWindow window)
         {
-            this.window = window;
+            _window = window;
             InitiliseDirectories();
 
-            ImageDetails temp = new BingXMLParser().GetSpecificImageDetails(0);
-            imageList.Add(temp);
-            downloadImageManager.DownloadImage(temp);
+            
+            var temp = new BingXMLParser().GetSpecificImageDetails(0);
+            _imageList.Add(temp);
+            DownloadImageManager.DownloadImage(temp);
             UpdateWallpaper(temp);
 
-            Thread chacheThread = new Thread(new ThreadStart(cacheWallpapers));
-            chacheThread.IsBackground = true;
-            chacheThread.Start();
+            new Thread(CacheWallpapers) {IsBackground = true}.Start();
         }
 
-        public void cacheWallpapers()
+        public void CacheWallpapers()
         {
-            Console.WriteLine("Starting caching");
-            int cacheNumber = 0;
+            var cacheNumber = 0;
             while (true)
-            {
-                for (;cacheNumber < imageNumber + 10; cacheNumber++)
+                for (; cacheNumber < ImageNumber + 10; cacheNumber++)
                 {
-                    ImageDetails details = parser.GetSpecificImageDetails((uint)cacheNumber);
-                    String ImagePath = basePath + details.ImageFilePath;
-                    Console.WriteLine("Cache " + cacheNumber + " File Name: " + details.ImageFilePath);
-                    downloadImageManager.DownloadImage(details);
-                    imageList.Add(details);
+                    var details = _defaultParser.GetSpecificImageDetails((uint) cacheNumber);
+                    DownloadImageManager.DownloadImage(details);
+                    _imageList.Add(details);
                 }
-            }
         }
 
         public void InitiliseDirectories()
         {
-            List<String> pathsList = new List<string> {"\\img\\"};
+            var pathsList = new List<string> {"\\img\\", "\\json\\"};
 
-            foreach (String path in pathsList)
+            foreach (var path in pathsList)
             {
-                String fullPath = Directory.GetCurrentDirectory() + path;
+                var fullPath = Directory.GetCurrentDirectory() + path;
                 if (!Directory.Exists(fullPath))
-                {
                     Directory.CreateDirectory(fullPath);
-                }
             }
         }
 
 
         public void UpdateWallpaper(ImageDetails details)
         {
-            fullPath = basePath + details.ImageFilePath;
-            downloadImageManager.DownloadImage(details);
-            BitmapImage image = new BitmapImage(new Uri(fullPath));
-            window.ImageBackground.ImageSource = image;
+            DownloadImageManager.DownloadImage(details);
+            var image = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\img\\" + details.ImageFilePath));
+            _window.ImageBackground.ImageSource = image;
         }
 
         public void NextWallpaper()
         {
-            
-            while (!(imageList.Count >= imageNumber + 2))
+            while (!(_imageList.Count >= ImageNumber + 2))
             {
             }
 
-            imageNumber++;
-            UpdateWallpaper(imageList[imageNumber]);
+            ImageNumber++;
+            UpdateWallpaper(_imageList[ImageNumber]);
         }
 
         public void PreviousWallpaper()
         {
-            if (imageNumber > 0)
+            if (ImageNumber > 0)
             {
-                imageNumber--;
-                UpdateWallpaper(imageList[imageNumber]);
+                ImageNumber--;
+                UpdateWallpaper(_imageList[ImageNumber]);
             }
         }
     }

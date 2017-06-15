@@ -15,7 +15,7 @@ namespace Bing_Wallpaper
     {
 
 
-        public void DownloadImage(ImageDetails details)
+        public static void DownloadImage(ImageDetails details)
         {
             using (WebClient client = new WebClient())
             {
