@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="Bing_Wallpaper.Pages.Time_Line_Page.Time_Line_Page"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Bing_Wallpaper.Pages.Time_Line_Page"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <TextBox>A time line view showing thumb nails of month's worth of images</TextBox> 
+    </Grid>
+</UserControl>

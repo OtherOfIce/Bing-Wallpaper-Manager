@@ -1,0 +1,28 @@
+﻿<Window x:Class="Bing_Wallpaper.PageSwitcher"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Bing_Wallpaper"
+        mc:Ignorable="d"
+        xmlns:HamburgerMenu="clr-namespace:HamburgerMenu;assembly=HamburgerMenu"
+        Closing="Window_Closing"
+        Style="{StaticResource MyWindowStyle}"
+        Title="Bing Wallpaper Manager" Height="450" Width="800">
+
+    <Grid Margin="0" Name="Grid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MaxWidth="170"></ColumnDefinition>
+            <ColumnDefinition Width="0.8*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+    
+    <HamburgerMenu:HamburgerMenu Background="#FF2D2D30" MenuIconColor="White" SelectionIndicatorColor="White" MenuItemForeground="White" HorizontalAlignment="Left" Grid.Column="0">
+            <HamburgerMenu:HamburgerMenuItem Name="HomeButton" Icon="../Icons/Home.ico" Text="Home" SelectionCommand="{Binding ElementName=this_}"/>
+            <HamburgerMenu:HamburgerMenuItem Name="TimeLineButton" Icon="../Icons/list.ico" Text="Time Line"/>
+            <HamburgerMenu:HamburgerMenuItem Name="SettingsButton" Icon="../Icons/Settings.ico" Text="Settings Page"/>
+
+        </HamburgerMenu:HamburgerMenu>
+        
+    <ContentControl Name="ContentControl" Grid.Column="1"></ContentControl>
+    </Grid>
+</Window>

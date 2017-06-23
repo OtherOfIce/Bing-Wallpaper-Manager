@@ -47,7 +47,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="MyWindowStyle" TargetType="local:MainWindow">
+    <Style x:Key="MyWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="Foreground" Value="{DynamicResource ForegroundColorBrush}" />
         <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}" />
         <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
@@ -55,7 +55,7 @@
         <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:MainWindow">
+                <ControlTemplate TargetType="{x:Type Window}">
                     <Border x:Name="WindowBorder"
                             Margin="{Binding Source={x:Static SystemParameters.WindowNonClientFrameThickness}}"
                             Background="{StaticResource WindowBackgroundColorBrush}">

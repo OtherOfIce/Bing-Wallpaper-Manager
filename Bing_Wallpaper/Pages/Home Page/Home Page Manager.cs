@@ -6,15 +6,15 @@ using System.Windows.Media.Imaging;
 
 namespace Bing_Wallpaper
 {
-    internal class BingWallpaperManager
+    public class HomeWallpaperManager
     {
         private readonly BingJSONParser _defaultParser = new BingJSONParser();
         private readonly List<ImageDetails> _imageList = new List<ImageDetails>();
-        private readonly MainWindow _window;
+        private readonly Home_Page _window;
         
         public int ImageNumber;
 
-        public BingWallpaperManager(MainWindow window)
+        public HomeWallpaperManager(Home_Page window)
         {
             _window = window;
             InitiliseDirectories();

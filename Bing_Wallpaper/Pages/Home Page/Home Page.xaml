@@ -1,13 +1,10 @@
-﻿<Window x:Class="Bing_Wallpaper.MainWindow"
+﻿<UserControl x:Class="Bing_Wallpaper.Home_Page"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bing_Wallpaper"
-        mc:Ignorable="d"
-        Closing="Window_Closing"
-        Style="{StaticResource MyWindowStyle}"
-        Title="Bing Wallpaper Manager" Height="450" Width="725">
+        mc:Ignorable="d">
     
     <Grid Margin="0">
         <Grid.ColumnDefinitions>
@@ -39,4 +36,4 @@
         <Button x:Name="Backwards_Button" Grid.Column="0" Margin="0" FontFamily="Marlett" FontSize="20" Content="3" Foreground="White" Background="Black" Opacity="0.3" Click="Backwards_Button_Click"/>
 
     </Grid>
-</Window>
+</UserControl>
