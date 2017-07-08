@@ -19,10 +19,19 @@ namespace Bing_Wallpaper
         {
             using (WebClient client = new WebClient())
             {
-                String fullPath = Directory.GetCurrentDirectory() + "\\img\\" + details.ImageFilePath;
-                if (!File.Exists(fullPath))
+                String ImagePath = Directory.GetCurrentDirectory() + "\\img\\" + details.ImageFilePath;
+
+                String test = details.ImageUri.OriginalString;
+                test = test.Remove(test.Length - 13, 13) + "320x180.jpg";
+                String ThumbnailPath = Directory.GetCurrentDirectory() + "\\thumbnails\\" + details.ImageFilePath;
+
+                if (!File.Exists(ImagePath))
                 {
-                    client.DownloadFile(details.ImageUri, fullPath);
+                    client.DownloadFile(details.ImageUri, ImagePath);
+                }
+                if (!File.Exists(ThumbnailPath))
+                {
+                    client.DownloadFile(test, ThumbnailPath);
                 }
             }
         }

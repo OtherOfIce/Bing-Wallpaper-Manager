@@ -8,7 +8,7 @@
         xmlns:HamburgerMenu="clr-namespace:HamburgerMenu;assembly=HamburgerMenu"
         Closing="Window_Closing"
         Style="{StaticResource MyWindowStyle}"
-        Title="Bing Wallpaper Manager" Height="450" Width="800">
+        Title="Bing Wallpaper Manager" Height="550" Width="1100">
 
     <Grid Margin="0" Name="Grid">
         <Grid.ColumnDefinitions>

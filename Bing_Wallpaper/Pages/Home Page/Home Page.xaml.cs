@@ -1,8 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Change_Wallpaper;
 
@@ -10,13 +7,16 @@ namespace Bing_Wallpaper
 {
     public partial class Home_Page : ISwitchable
     {
-        public HomeWallpaperManager manager;
+        public BingWallpaperManager manager;
 
-
-        public Home_Page()
+        public Home_Page(BingWallpaperManager man)
         {
             InitializeComponent();
-            manager = new HomeWallpaperManager(this);
+            manager = man;
+            this.DataContext = manager;
+//            Text = manager.currentImage;
+//            ImageBackground.ImageSource = Text;
+
         }
 
         

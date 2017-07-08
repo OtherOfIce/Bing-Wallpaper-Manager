@@ -66,6 +66,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="General\Home Page Manager.cs" />
     <Compile Include="Pages\Settings Page\Settings Page.xaml.cs">
       <DependentUpon>Settings Page.xaml</DependentUpon>
     </Compile>
@@ -89,7 +90,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Pages\Home Page\Home Page Manager.cs" />
     <Compile Include="General\ChangeWallpaper.cs" />
     <Compile Include="General\Download Image.cs" />
     <Compile Include="Pages\Time Line Page\Time Line Page.xaml.cs">
@@ -111,6 +111,7 @@
       <DependentUpon>PageSwitcher.xaml</DependentUpon>
     </Compile>
     <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

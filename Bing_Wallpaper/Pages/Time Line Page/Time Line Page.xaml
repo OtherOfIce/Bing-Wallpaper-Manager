@@ -6,7 +6,33 @@
              xmlns:local="clr-namespace:Bing_Wallpaper.Pages.Time_Line_Page"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <TextBox>A time line view showing thumb nails of month's worth of images</TextBox> 
-    </Grid>
+    <ScrollViewer>
+        <ItemsControl Name="ThumbnailControl">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel IsItemsHost="True"></WrapPanel>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                        <Grid Margin="5">
+                            <Rectangle Fill="White">
+                                <Rectangle.BitmapEffect>
+                                    <DropShadowBitmapEffect Opacity="0.5" ShadowDepth="0" />
+                                </Rectangle.BitmapEffect>
+                            </Rectangle>
+                            <Border Background="Gray" BorderBrush="White" BorderThickness="3" Height="180" Width="320">
+                            <Image Stretch="Uniform" Source="{Binding Path=image, Mode=OneTime, IsAsync=True}">
+                                <Image.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Click="MenuItem_OnClick" Header="Set As Wallpaper" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"></MenuItem>
+                                    </ContextMenu>
+                                </Image.ContextMenu>
+                            </Image>
+                        </Border>
+                        </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
 </UserControl>

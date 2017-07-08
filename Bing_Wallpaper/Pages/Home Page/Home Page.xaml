@@ -15,7 +15,7 @@
         
         
         <Grid.Background>
-            <ImageBrush x:Name="ImageBackground" Stretch="UniformToFill"/>
+            <ImageBrush x:Name="ImageBackground" ImageSource="{Binding CurrentImage}" Stretch="UniformToFill"/>
         </Grid.Background>
 
         

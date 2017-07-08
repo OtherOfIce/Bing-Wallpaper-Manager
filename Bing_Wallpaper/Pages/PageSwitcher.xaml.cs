@@ -6,62 +6,29 @@ using Bing_Wallpaper.Pages.Time_Line_Page;
 
 namespace Bing_Wallpaper
 {
-    public class SwitchCommand : ICommand
-    {
-        private readonly Action<object> _action;
-        public SwitchCommand(Action<object> action)
-        {
-            this._action = action;
-        }
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            _action(parameter);
-        }
-
-        public event EventHandler CanExecuteChanged;
-    }
-
-    public static class Switcher
-    {
-        public static PageSwitcher PageSwitcher;
-        public static void Switch(UserControl newPage)
-        {
-            PageSwitcher.Navigate(newPage);
-        }
-
-        public static void Switch(UserControl newPage, object state)
-        {
-            PageSwitcher.Navigate(newPage, state);
-        }
-    }
-
-    public interface ISwitchable
-    {
-        void UtilizeState(object state);
-    }
+    
 
     public partial class PageSwitcher : Window
     {
-        private readonly Home_Page _main;
+        private readonly Home_Page _mainPage;
+
+
         public PageSwitcher()
         {
             InitializeComponent();
-            _main = new Home_Page();
-
-
+            BingWallpaperManager man = new BingWallpaperManager();
+            _mainPage = new Home_Page(man);
+            var timeLinePage = new Time_Line_Page(man);
+            var settingsPage = new Settings_Page();
+            
 
             Switcher.PageSwitcher = this;
-            Switcher.Switch(_main);
+            Switcher.Switch(_mainPage);
 
             
-            HomeButton.SelectionCommand =  new SwitchCommand(_ => Switcher.Switch(_main));
-            TimeLineButton.SelectionCommand = new SwitchCommand(_ => Switcher.Switch(new Time_Line_Page()));
-            SettingsButton.SelectionCommand = new SwitchCommand(_ => Switcher.Switch(new Settings_Page()));
+            HomeButton.SelectionCommand =  new SwitchCommand(_ => Switcher.Switch(_mainPage));
+            TimeLineButton.SelectionCommand = new SwitchCommand(_ => Switcher.Switch(timeLinePage));
+            SettingsButton.SelectionCommand = new SwitchCommand(_ => Switcher.Switch(settingsPage));
 
             this.CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, this.OnCloseWindow));
             this.CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, this.OnMaximizeWindow,
@@ -94,12 +61,12 @@ namespace Bing_Wallpaper
                 {
                     if (e.Key == Key.Left)
                     {
-                        _main.manager.PreviousWallpaper();
+                        _mainPage.manager.PreviousWallpaper();
                     }
         
                     if (e.Key == Key.Right)
                     {
-                        _main.manager.NextWallpaper();
+                        _mainPage.manager.NextWallpaper();
                     }
                 }
 
@@ -137,5 +104,44 @@ namespace Bing_Wallpaper
         {
 
         }
+    }
+    
+    public class SwitchCommand : ICommand
+    {
+        private readonly Action<object> _action;
+        public SwitchCommand(Action<object> action)
+        {
+            this._action = action;
+        }
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            _action(parameter);
+        }
+
+        public event EventHandler CanExecuteChanged;
+    }
+
+    public static class Switcher
+    {
+        public static PageSwitcher PageSwitcher;
+        public static void Switch(UserControl newPage)
+        {
+            PageSwitcher.Navigate(newPage);
+        }
+
+        public static void Switch(UserControl newPage, object state)
+        {
+            PageSwitcher.Navigate(newPage, state);
+        }
+    }
+
+    public interface ISwitchable
+    {
+        void UtilizeState(object state);
     }
 }

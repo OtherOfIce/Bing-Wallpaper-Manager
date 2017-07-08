@@ -1,33 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Bing_Wallpaper.Pages.Time_Line_Page
 {
-    /// <summary>
-    /// Interaction logic for Time_Line_Page.xaml
-    /// </summary>
+    public class Thumbnail
+    {
+        public Thumbnail(BitmapImage image)
+        {
+            this.image = image;
+        }
+
+        public BitmapImage image { get; set; }
+    }
+
     public partial class Time_Line_Page : UserControl, ISwitchable
     {
-        public Time_Line_Page()
+        public readonly BingWallpaperManager manager;
+        
+
+        public Time_Line_Page(BingWallpaperManager man)
         {
+            manager = man;
             InitializeComponent();
+            ThumbnailControl.ItemsSource = manager._thumbnails;
         }
 
         public void UtilizeState(object state)
         {
             throw new NotImplementedException();
         }
+
+        private void MenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem) sender;
+            ContextMenu help = (ContextMenu) item.CommandParameter;
+            Image image = (Image) help.PlacementTarget;
+            Console.WriteLine(Directory.GetCurrentDirectory() + "//img//" + System.IO.Path.GetFileName(image.Source.ToString()));
+            Change_Wallpaper.ChangeWallpaper.SetBackground(Directory.GetCurrentDirectory() + "\\img\\" + System.IO.Path.GetFileName(image.Source.ToString()));
+        }
+
     }
 }

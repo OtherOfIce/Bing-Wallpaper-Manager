@@ -6,7 +6,5 @@
              xmlns:local="clr-namespace:Bing_Wallpaper"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <TextBox>This is totally a settings Menu</TextBox>
-    </Grid>
+    <TextBox>A Great settings page much WOW!</TextBox>
 </UserControl>
