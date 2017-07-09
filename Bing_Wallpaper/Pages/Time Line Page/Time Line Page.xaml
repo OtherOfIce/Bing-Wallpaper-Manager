@@ -25,7 +25,8 @@
                             <Image Stretch="Uniform" Source="{Binding Path=image, Mode=OneTime, IsAsync=True}">
                                 <Image.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Click="MenuItem_OnClick" Header="Set As Wallpaper" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"></MenuItem>
+                                        <MenuItem Click="MenuItem_View_Wallpaper_OnClick" Header="View Wallpaper" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"></MenuItem>
+                                        <MenuItem Click="MenuItem_Set_Wallpaper_OnClick" Header="Set As Wallpaper" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"></MenuItem>
                                     </ContextMenu>
                                 </Image.ContextMenu>
                             </Image>

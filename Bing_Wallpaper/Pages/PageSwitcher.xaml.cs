@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Bing_Wallpaper.Pages.Time_Line_Page;
 
@@ -69,6 +70,11 @@ namespace Bing_Wallpaper
                         _mainPage.manager.NextWallpaper();
                     }
                 }
+
+        public void SwitchHomepage()
+        {
+            Switcher.Switch(_mainPage);
+        }
 
         private void OnCanResizeWindow(object sender, CanExecuteRoutedEventArgs e)
         {

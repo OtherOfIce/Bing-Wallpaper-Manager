@@ -5,6 +5,7 @@ namespace Bing_Wallpaper
     public struct ImageDetails
     {
         public String ImageFilePath;
+        public String ThumbnailFilePath;
         public Uri ImageUri;
     }
     interface IParser

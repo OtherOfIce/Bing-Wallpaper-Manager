@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using Bing_Wallpaper.Annotations;
 using Bing_Wallpaper.Pages.Time_Line_Page;
@@ -15,8 +15,8 @@ namespace Bing_Wallpaper
     public class BingWallpaperManager : INotifyPropertyChanged
     {
         private readonly BingJSONParser _defaultParser = new BingJSONParser();
-        public readonly List<ImageDetails> _imageList = new List<ImageDetails>();
-        public ObservableCollection<Thumbnail> _thumbnails = new ObservableCollection<Thumbnail>();
+        public readonly List<ImageDetails> ImageList = new List<ImageDetails>();
+        public readonly ObservableCollection<Thumbnail> Thumbnails = new ObservableCollection<Thumbnail>();
 
 
 
@@ -31,7 +31,7 @@ namespace Bing_Wallpaper
             }
         }
 
-        private int ImageNumber;
+        public int ImageNumber;
 
         public BingWallpaperManager()
         {
@@ -39,8 +39,8 @@ namespace Bing_Wallpaper
 
 
             var temp = new BingXMLParser().GetSpecificImageDetails(0);
-            _imageList.Add(temp);
             DownloadImageManager.DownloadImage(temp);
+            ImageList.Add(temp);
             UpdateWallpaper(temp);
 
             new Thread(CacheWallpapers) {IsBackground = true}.Start();
@@ -56,7 +56,7 @@ namespace Bing_Wallpaper
                 {
                     var details = _defaultParser.GetSpecificImageDetails((uint) cacheNumber);
                     DownloadImageManager.DownloadImage(details);
-                    _imageList.Add(details);
+                    ImageList.Add(details);
                     
 
                 }
@@ -65,15 +65,22 @@ namespace Bing_Wallpaper
         public void CacheThumbnails()
         {
             var cacheNumber = 0;
-            for (; cacheNumber < 100; cacheNumber++)
+            for (; cacheNumber < 200; cacheNumber++)
             {
-                var details = _defaultParser.GetSpecificImageDetails((uint)cacheNumber);
-                App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                var details = _defaultParser.GetSpecificImageDetails((uint) cacheNumber);
+                
+                lock (ImageList)
                 {
-                    DownloadImageManager.DownloadImage(details);
-                    _thumbnails.Add(new Thumbnail(new BitmapImage(
-                        new Uri(Directory.GetCurrentDirectory() + "\\thumbnails\\" + details.ImageFilePath))));
-                });
+                    if (!ImageList.Contains(details))
+                    {
+                        ImageList.Add(details);
+                        DownloadImageManager.DownloadImage(details);
+                    }
+                }
+            
+                    
+                Application.Current.Dispatcher.Invoke(() => Thumbnails.Add(new Thumbnail(new BitmapImage(
+                    new Uri(details.ThumbnailFilePath)))));
             }
         }
 
@@ -94,17 +101,17 @@ namespace Bing_Wallpaper
         {
             DownloadImageManager.DownloadImage(details);
             CurrentImage =
-                new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\img\\" + details.ImageFilePath));
+                new BitmapImage(new Uri(details.ImageFilePath));
         }
 
         public void NextWallpaper()
         {
-            while (!(_imageList.Count >= ImageNumber + 2))
+            while (!(ImageList.Count >= ImageNumber + 2))
             {
             }
 
             ImageNumber++;
-            UpdateWallpaper(_imageList[ImageNumber]);
+            UpdateWallpaper(ImageList[ImageNumber]);
         }
 
         public void PreviousWallpaper()
@@ -112,7 +119,7 @@ namespace Bing_Wallpaper
             if (ImageNumber > 0)
             {
                 ImageNumber--;
-                UpdateWallpaper(_imageList[ImageNumber]);
+                UpdateWallpaper(ImageList[ImageNumber]);
             }
         }
 

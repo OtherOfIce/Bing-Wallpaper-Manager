@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading;
 using Newtonsoft.Json;
@@ -60,8 +61,8 @@ namespace Bing_Wallpaper
 
             ImageDetails details;
             details.ImageUri = new Uri("http://az608707.vo.msecnd.net/files/" + wallInfo.wpFullFilename);
-            details.ImageFilePath = wallInfo.wpShortFilename;
-
+            details.ImageFilePath = Directory.GetCurrentDirectory() + "\\img\\" + wallInfo.wpShortFilename;
+            details.ThumbnailFilePath = Directory.GetCurrentDirectory() + "\\thumbnails\\" + wallInfo.wpShortFilename;
             _imagePosition += 1;
             return details;
         }
@@ -73,7 +74,8 @@ namespace Bing_Wallpaper
             var wallInfo = _wallpaperDetailsList[(int) _imagePosition];
             ImageDetails details;
             details.ImageUri = new Uri("http://az608707.vo.msecnd.net/files/" + wallInfo.wpFullFilename);
-            details.ImageFilePath = wallInfo.wpShortFilename;
+            details.ImageFilePath = Directory.GetCurrentDirectory() + "\\img\\" + wallInfo.wpShortFilename;
+            details.ThumbnailFilePath = Directory.GetCurrentDirectory() + "\\thumbnails\\" + wallInfo.wpShortFilename;
             return details;
         }
 
@@ -85,7 +87,8 @@ namespace Bing_Wallpaper
 
             ImageDetails details;
             details.ImageUri = new Uri("http://az608707.vo.msecnd.net/files/" + wallInfo.wpFullFilename);
-            details.ImageFilePath = wallInfo.wpShortFilename;
+            details.ImageFilePath = Directory.GetCurrentDirectory() + "\\img\\" + wallInfo.wpShortFilename;
+            details.ThumbnailFilePath = Directory.GetCurrentDirectory() + "\\thumbnails\\" + wallInfo.wpShortFilename;
 
             return details;
         }

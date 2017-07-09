@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -28,7 +29,12 @@ namespace Bing_Wallpaper
             XmlNodeList test = xmlDoc.GetElementsByTagName("urlBase");
             ImageDetails details;
             details.ImageUri = new Uri(@"https://www.bing.com" + test[0].InnerText + "_1920x1080.jpg");
-            details.ImageFilePath = test[0].InnerText.Split('/').Last().Split('_').First() + ".jpg";
+            String filename = test[0].InnerText.Split('/').Last().Split('_').First() + ".jpg";
+
+            details.ImageFilePath = Directory.GetCurrentDirectory() + "\\img\\" + filename;
+
+
+            details.ThumbnailFilePath = Directory.GetCurrentDirectory() + "\\thumbnails\\" + filename;
             return details;
         }
 

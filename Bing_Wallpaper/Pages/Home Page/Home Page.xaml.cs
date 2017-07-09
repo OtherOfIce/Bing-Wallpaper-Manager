@@ -7,19 +7,15 @@ namespace Bing_Wallpaper
 {
     public partial class Home_Page : ISwitchable
     {
-        public BingWallpaperManager manager;
+        public readonly BingWallpaperManager manager;
 
         public Home_Page(BingWallpaperManager man)
         {
             InitializeComponent();
             manager = man;
             this.DataContext = manager;
-//            Text = manager.currentImage;
-//            ImageBackground.ImageSource = Text;
-
         }
 
-        
 
         private void Forwards_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -33,7 +29,6 @@ namespace Bing_Wallpaper
 
         private void Change_Wallpaper_Button_Click(object sender, RoutedEventArgs e)
         {
-            
             ChangeWallpaper.SetBackground(new Uri(ImageBackground.ImageSource.ToString()).LocalPath);
         }
 

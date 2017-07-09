@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media.Imaging;
 
 namespace Bing_Wallpaper.Pages.Time_Line_Page
@@ -29,7 +25,7 @@ namespace Bing_Wallpaper.Pages.Time_Line_Page
         {
             manager = man;
             InitializeComponent();
-            ThumbnailControl.ItemsSource = manager._thumbnails;
+            ThumbnailControl.ItemsSource = manager.Thumbnails;
         }
 
         public void UtilizeState(object state)
@@ -37,14 +33,24 @@ namespace Bing_Wallpaper.Pages.Time_Line_Page
             throw new NotImplementedException();
         }
 
-        private void MenuItem_OnClick(object sender, RoutedEventArgs e)
+        private void MenuItem_Set_Wallpaper_OnClick(object sender, RoutedEventArgs e)
         {
             MenuItem item = (MenuItem) sender;
             ContextMenu help = (ContextMenu) item.CommandParameter;
             Image image = (Image) help.PlacementTarget;
-            Console.WriteLine(Directory.GetCurrentDirectory() + "//img//" + System.IO.Path.GetFileName(image.Source.ToString()));
             Change_Wallpaper.ChangeWallpaper.SetBackground(Directory.GetCurrentDirectory() + "\\img\\" + System.IO.Path.GetFileName(image.Source.ToString()));
         }
 
+        private void MenuItem_View_Wallpaper_OnClick(object sender, RoutedEventArgs e)
+        {
+            
+            MenuItem item = (MenuItem)sender;
+            ContextMenu help = (ContextMenu)item.CommandParameter;
+            Image image = (Image)help.PlacementTarget;
+            int imagePos = ThumbnailControl.Items.IndexOf(image.DataContext) + 1;
+            manager.ImageNumber = imagePos;
+            manager.UpdateWallpaper(manager.ImageList[imagePos]);
+            ((PageSwitcher) Application.Current.MainWindow).SwitchHomepage();
+        }
     }
 }

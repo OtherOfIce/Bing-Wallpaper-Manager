@@ -66,7 +66,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="General\Home Page Manager.cs" />
+    <Compile Include="General\Bing Wallpaper Manager.cs" />
     <Compile Include="Pages\Settings Page\Settings Page.xaml.cs">
       <DependentUpon>Settings Page.xaml</DependentUpon>
     </Compile>
