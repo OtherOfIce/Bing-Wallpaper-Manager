@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Bing_Wallpaper
 {
-    public class BingWallpapers
+    public class AllBingWallpapers
     {
         public List<string> imageIds { get; set; }
         public List<string> categories { get; set; }
@@ -21,7 +21,7 @@ namespace Bing_Wallpaper
         public List<int> dates { get; set; }
     }
 
-    public class WallpaperInfo
+    public class BingWallpaperInfo
     {
         public string title { get; set; }
         public string infoUrl { get; set; }
@@ -35,20 +35,21 @@ namespace Bing_Wallpaper
 
     internal class BingJSONParser : IParser
     {
-        private readonly BingWallpapers _allWallpapers;
-        private readonly List<WallpaperInfo> _wallpaperDetailsList;
+        private readonly AllBingWallpapers _allWallpapers;
+        private readonly List<BingWallpaperInfo> _wallpaperDetailsList;
         private uint _imagePosition;
+        private static string imageLocation = "http://az608707.vo.msecnd.net/files/";
 
         public BingJSONParser()
         {
-            _wallpaperDetailsList = new List<WallpaperInfo>();
+            _wallpaperDetailsList = new List<BingWallpaperInfo>();
             using (var client = new WebClient())
             {
                 var jsonData = client.DownloadString(@"http://www.bing.com/gallery/home/browsedata?z=0");
-                jsonData = jsonData.Remove(0, 48);
-                jsonData = jsonData.Remove(jsonData.Length - 27, 27);
+                jsonData = jsonData.Remove(0, 48); //Cut out JS function signature (Leaving just JSON data)
+                jsonData = jsonData.Remove(jsonData.Length - 27, 27); //Cut off after JSON data
                 _allWallpapers =
-                    JsonConvert.DeserializeObject<BingWallpapers>(jsonData
+                    JsonConvert.DeserializeObject<AllBingWallpapers>(jsonData
                     );
 
                 new Thread(RemoveNonWallpapers) {IsBackground = true}.Start();
@@ -60,7 +61,7 @@ namespace Bing_Wallpaper
             var wallInfo = _wallpaperDetailsList[(int) _imagePosition];
 
             ImageDetails details;
-            details.ImageUri = new Uri("http://az608707.vo.msecnd.net/files/" + wallInfo.wpFullFilename);
+            details.ImageUri = new Uri(imageLocation + wallInfo.wpFullFilename);
             details.ImageFilePath = Directory.GetCurrentDirectory() + "\\img\\" + wallInfo.wpShortFilename;
             details.ThumbnailFilePath = Directory.GetCurrentDirectory() + "\\thumbnails\\" + wallInfo.wpShortFilename;
             _imagePosition += 1;
@@ -73,7 +74,7 @@ namespace Bing_Wallpaper
                 _imagePosition -= 1;
             var wallInfo = _wallpaperDetailsList[(int) _imagePosition];
             ImageDetails details;
-            details.ImageUri = new Uri("http://az608707.vo.msecnd.net/files/" + wallInfo.wpFullFilename);
+            details.ImageUri = new Uri(imageLocation + wallInfo.wpFullFilename);
             details.ImageFilePath = Directory.GetCurrentDirectory() + "\\img\\" + wallInfo.wpShortFilename;
             details.ThumbnailFilePath = Directory.GetCurrentDirectory() + "\\thumbnails\\" + wallInfo.wpShortFilename;
             return details;
@@ -86,7 +87,7 @@ namespace Bing_Wallpaper
             var wallInfo = _wallpaperDetailsList[(int) imgNum];
 
             ImageDetails details;
-            details.ImageUri = new Uri("http://az608707.vo.msecnd.net/files/" + wallInfo.wpFullFilename);
+            details.ImageUri = new Uri(imageLocation + wallInfo.wpFullFilename);
             details.ImageFilePath = Directory.GetCurrentDirectory() + "\\img\\" + wallInfo.wpShortFilename;
             details.ThumbnailFilePath = Directory.GetCurrentDirectory() + "\\thumbnails\\" + wallInfo.wpShortFilename;
 
@@ -106,14 +107,35 @@ namespace Bing_Wallpaper
 
         private void RemoveNonWallpapers()
         {
-            var data = _allWallpapers;
+            String jsonStorageBasePath = Directory.GetCurrentDirectory() + "\\JSON\\";
             for (var index = 0; index < _allWallpapers.imageIds.Count; index++)
             {
-                var removeWallpaperInfo = JsonConvert.DeserializeObject<WallpaperInfo>(
-                    new WebClient().DownloadString(
-                        "http://www.bing.com/gallery/home/imagedetails/" + data.imageIds[index]));
-                if (removeWallpaperInfo.wallpaper)
-                    _wallpaperDetailsList.Add(removeWallpaperInfo);
+                BingWallpaperInfo temp = null;
+                String tempFilePath = jsonStorageBasePath + _allWallpapers.imageIds[index].GetHashCode() +
+                                      ".json";
+
+                FileInfo file = new FileInfo(tempFilePath);
+
+                if (file.Exists && file.Length != 0)
+                {
+                    temp = JsonConvert.DeserializeObject<BingWallpaperInfo>(File.ReadAllText(tempFilePath));
+                }
+
+                if (file.Exists && file.Length == 0)
+                {
+                    file.Delete();
+                }
+
+                if (!file.Exists)
+                {
+                    String jsonData = new WebClient().DownloadString(
+                        "http://www.bing.com/gallery/home/imagedetails/" + _allWallpapers.imageIds[index]);
+                    temp = JsonConvert.DeserializeObject<BingWallpaperInfo>(jsonData);
+                    File.WriteAllText(tempFilePath, jsonData);
+                }
+
+                if (temp.wallpaper)
+                    _wallpaperDetailsList.Add(temp);
             }
         }
     }

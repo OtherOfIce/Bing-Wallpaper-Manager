@@ -76,11 +76,12 @@ namespace Bing_Wallpaper
                         ImageList.Add(details);
                         DownloadImageManager.DownloadImage(details);
                     }
+                    Application.Current.Dispatcher.Invoke(() => Thumbnails.Add(new Thumbnail(new BitmapImage(
+                        new Uri(details.ThumbnailFilePath)))));
                 }
             
                     
-                Application.Current.Dispatcher.Invoke(() => Thumbnails.Add(new Thumbnail(new BitmapImage(
-                    new Uri(details.ThumbnailFilePath)))));
+                
             }
         }
 
